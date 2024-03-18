@@ -63,15 +63,13 @@ lib.callback.register('dd5m_foodtrucks:server:getOwner', function(source, plate)
 end)
 
 lib.callback.register('dd5m_foodtrucks:server:handleCraft', function(source, ingredients, reward, count, plate)
-    local CraftSuccess = true
+    local success = nil
     for k, v in pairs(ingredients) do
-        local success = ox_inventory:RemoveItem('food_truck_stash'..plate, v.item, v.count)
-        if not success then CraftSuccess = false Alerts(source, 'Failed to remove ingredients.', 'error') end
+        success = ox_inventory:RemoveItem('food_truck_stash'..plate, v.item, v.count)
+        if not success then Alerts(source, 'Failed to remove ingredients.', 'error') return end
     end
-    if CraftSuccess then
-        local success = ox_inventory:AddItem('food_truck_counter'..plate, reward, count)
-        if success then Alerts(source, 'Order on the counter!', 'info') end
-    end
+    local itemAdded = ox_inventory:AddItem('food_truck_counter'..plate, reward, count)
+    if itemAdded then Alerts(source, 'Order on the counter!', 'info') end
 end)
 
 lib.callback.register('dd5m_foodtrucks:server:getEmployees', function(source, plate)
