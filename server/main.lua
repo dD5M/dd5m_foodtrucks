@@ -77,17 +77,18 @@ lib.callback.register('dd5m_foodtrucks:server:getEmployees', function(source, pl
 end)
 
 RegisterServerEvent('dd5m_foodtrucks:server:handleEmployee', function(plate, empId, task)
-    -- if not DoesPlayerExist(empId) then Alerts('Player not online!', 'error') return end
+    if not DoesPlayerExist(empId) then Alerts('Player not online!', 'error') return end
     if task == 'insert' then
-        if table.find(tempEmployees[plate], empId) then
+        if tempEmployees[plate] and table.find(tempEmployees[plate], empId) then
             Alerts(source, 'Already hired!', 'error')
             return
         end
         table.insert(tempEmployees[plate], empId)
         Alerts(source, 'Employee hired!', 'info')
     elseif task == 'remove' then
-
-        table.remove(tempEmployees[plate], empId)
-        Alerts(source, 'Employee released!', 'info')
+        if tempEmployees[plate] and table.find(tempEmployees[plate], empId) then
+            table.remove(tempEmployees[plate], empId)
+            Alerts(source, 'Employee released!', 'info')
+        end
     end
 end)
